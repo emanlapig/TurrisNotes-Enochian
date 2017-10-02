@@ -1,0 +1,31 @@
+// global css
+@import 'mixins';
+
+body {
+	padding: 0px;
+	margin: 0px;
+}
+
+.page {
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 100%;
+	left: 0px;
+	top: 0px;
+	background-color: #fff;
+	font-size: 16px;
+	margin-left: 0%;
+
+	&.animate {
+		@include transition( margin, 1s, ease-out, 0s );
+	}
+
+	&.off-right {
+		margin-left: 100%;
+	}
+
+	&.off-left {
+		margin-left: -100%;
+	}
+}

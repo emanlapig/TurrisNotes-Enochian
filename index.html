@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>Enochian Keys</title>
+	<script type="text/javascript" src="lib/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/min/Model.min.js"></script>
+	<script type="text/javascript" src="js/min/View.min.js"></script>
+	<script type="text/javascript" src="js/min/Controller.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.min.css" />
+</head>
+<body>
+	<div class="menu">
+		Calls
+		Words
+	</div>
+
+	<div class="container">
+
+		<div class="page calls animate">
+			<h1>Calls</h1>
+			<div class="calls-list">
+			</div>
+			<div class="btn new-call">+New Call</div>
+		</div>
+
+		<div class="page edit-call off-right animate">
+			<form>
+				<input type="text" placeholder="New Call" name="title" id="call-title" class="title"></input>
+			</form>
+			<div class="words-list">
+			</div>
+			<form id="edit-word">
+				<div class="btn add-word">Add word</div>
+				<div class="btn save-call">Save call</div>
+				<div class="btn cancel">Cancel</div>
+				<input type="text" placeholder="Enochian A" name="enoA" id="enoA"></input>
+				<input type="text" placeholder="Enochian B" name="enoB" id="enoB"></input>
+				<input type="text" placeholder="English" name="eng" id="eng"></input>
+			</form>
+		</div>
+
+		<div class="page read-call off-right animate">
+			<div class="btn translate">Show Translation</div>
+			<div class="call-display">
+			</div>
+		</div>
+
+	</div>
+
+	<script type="text/javascript">
+		//(function() {
+			//$( document ).ready( function() {
+				var model = new Model();
+				var view = new View();
+				var controller = new Controller();
+
+				controller.init();
+			//});
+		//})();
+	</script>
+</body>
+</html>
