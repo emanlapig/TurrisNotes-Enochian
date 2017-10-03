@@ -11,3 +11,8 @@
 	-moz-box-sizing: $val;
 	box-sizing: $val;
 }
+
+@font-face {
+	font-family: "OpenSans-Regular";
+	src: url( '../lib/fonts/OpenSans-Regular.ttf' ) format( 'truetype' );
+}

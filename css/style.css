@@ -1,6 +1,10 @@
+@font-face {
+  font-family: "OpenSans-Regular";
+  src: url("../lib/fonts/OpenSans-Regular.ttf") format("truetype"); }
 body {
   padding: 0px;
-  margin: 0px; }
+  margin: 0px;
+  font-family: "OpenSans-Regular"; }
 
 .page {
   position: absolute;

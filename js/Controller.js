@@ -20,55 +20,61 @@ var Controller = function() {
 							view.page.poll.polling = false;
 						}
 					},
-					freq: 200,
+					freq: 100,
 					callback: function() {
 						var call_btns = $( ".page.calls h3.call-title" );
 						// bind new call btn
-						$( ".page.calls .btn.new-call" ).unbind().on( "click touchstart", function( e ) {
+						$( ".page.calls .btn.new-call" ).on( "click touchstart", function( e ) {
+							view.page.calls.unbind();
 							view.page.go_to({
 								to: ".page.edit-call",
 								from: ".page.calls",
 								direction: "left"
 							});
-							c.page.calls.unbind();
-							c.page.new_call.init();
+							c.page.edit_call.init({ action: "new call" });
 						});
 						// bind call list btns
 						for ( var i=0; i<call_btns.length; i++ ) {
 							$( call_btns[i] ).on( "click touchstart", function( e ) {
+								view.page.calls.unbind();
 								view.page.go_to({
 									to: ".page.edit-call",
 									from: ".page.calls",
 									direction: "left"
 								});
-								c.page.calls.unbind();
 								console.log( $( e.target ).attr( "data-id" ) );
-								c.page.edit_call.init({ id: $( e.target ).attr( "data-id" ) });
+								c.page.edit_call.init({ action: "edit call", id: $( e.target ).attr( "data-id" ) });
 							});
 						}
 					}
 				});
-			},
-			unbind: function() {
-				$( ".page.calls h3, .page.calls .btn" ).unbind();
 			}
 		},
-		new_call: {
-			init: function() {
-				if ( model.last_call === undefined ) {
-					model.last_call = 0;
-				} else {
-					model.last_call += 1;
+		edit_call: {
+			init: function( options ) {
+				var action = options.action;
+				if ( action === "new call" ) {
+					if ( model.last_call === undefined ) {
+						model.last_call = 0;
+					} else {
+						model.last_call += 1;
+					}
+					c.ls.update_last_call( model.last_call );
+					var call = { id: model.last_call, title: "New Call", words: [] }
+						, id = call.id;
+					c.ls.add_call( call );
+					view.page.edit_call.init({
+						action: "new call",
+						id: id
+					});
+				} else if ( action === "edit call" ) {
+					var id = options.id;
+					view.page.edit_call.init({
+						action: "edit call",
+						id: id
+					});
+					c.page.render_word_list();
 				}
-				c.ls.update_last_call( model.last_call );
-				var call = { id: model.last_call, title: "New Call", words: [] }
-					, id = call.id;
-				c.ls.add_call( call );
-				view.page.edit_call.init({
-					action: "new call",
-					id: id
-				});
-				c.page.new_call.unbind();
 				$( ".page.edit-call .btn.add-word" ).on( "click touchstart", function( e ) {
 					model.last_word += 1;
 					c.ls.update_last_word( model.last_word );
@@ -82,20 +88,17 @@ var Controller = function() {
 					c.page.add_word({ word: word, call: call });
 					c.page.render_word_list();
 				});
-			},
-			unbind: function() {
-				$( ".page.edit-call .btn.add-word" ).unbind();
-			}
-		},
-		edit_call: {
-			init: function( options ) {
-				var id = options.id
-				view.page.edit_call.init({
-					action: "edit call",
-					id: id
+				$( ".page.edit-call .btn.cancel" ).on( "click touchstart", function( e ) {
+					view.page.edit_call.clear_form();
+					view.page.edit_call.unbind();
+					view.page.go_to({
+						to: ".page.calls",
+						from: ".page.edit-call",
+						direction: "right"
+					});
+					c.page.calls.init();
 				});
-				c.page.render_word_list();
-			},
+			}
 		},
 		render_word_list: function() {
 			view.page.render_word_list();
@@ -108,7 +111,7 @@ var Controller = function() {
 						view.page.poll.polling = false; // cancel page poll
 					}
 				},
-				freq: 200,
+				freq: 100,
 				callback: function() {
 					console.log( "word list done" );
 				}
@@ -152,7 +155,6 @@ var Controller = function() {
 		},
 		update_model: function() {
 			model = new Model();
-			c.ls.update_cache();
 			var ls = c.ls.cache;
 			if ( ls != null ) {
 				for ( var i=0; i<ls.length; i++ ) {
@@ -226,6 +228,12 @@ var Controller = function() {
 		edit_call: function( call ) {
 			c.ls.update_cache();
 			var call = call;
+			for ( var i=0; i<c.ls.cache.length; i++ ) {
+				if ( c.ls.cache[i].id == call.id && c.ls.cache[i].action === "edit call" ) {
+					c.ls.cache.splice( i, 1 );
+					break;
+				}
+			}
 			call.action = "edit call";
 			c.ls.cache.push( call );
 			c.ls.update_ls();

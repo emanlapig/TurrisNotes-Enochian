@@ -22,6 +22,9 @@ var View = function() {
 						$list_container.append( node );
 					}
 				}
+			},
+			unbind: function() {
+				$( ".page.calls h3, .page.calls .btn" ).unbind();
 			}
 		},
 		edit_call: {
@@ -33,8 +36,16 @@ var View = function() {
 				if ( action === "new call" ) {
 					// new call specific actions
 				} else if ( action === "edit call" ) {
-					console.log( v.page.edit_call.call_id );
+					var call = v.utils.get_call( id )
+						, title = call.title;
+					$( ".page.edit-call input#call-title" ).val( title );
 				}
+			},
+			unbind: function() {
+				$( ".page.edit-call .btn" ).unbind();
+			},
+			clear_form: function() {
+				$( ".page.edit-call input" ).val( "" );
 			}
 		},
 		render_word_list: function() {
